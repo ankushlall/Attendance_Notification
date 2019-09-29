@@ -22,7 +22,7 @@ class Application(object):
         self.icon_label=Label(self.top,image=self.icon)
         self.icon_label.place(x=10,y=10)
 
-        self.heading=Label(self.top, text="Student Profile", font='Aerial 40 bold',bg='black',fg='#ebb434')
+        self.heading=Label(self.top, text="Faculty Profile", font='Aerial 40 bold',bg='black',fg='#ebb434')
         self.heading.place(x=180,y=20)
 
         self.date_lable=Label(self.top,text="Today's Date "+date,bg='black',font='aerial 15 bold', fg='#ebb434')
@@ -32,15 +32,20 @@ class Application(object):
 
         #...........BOTTOM Frame Components..............
 
-        self.namelabel=Label(self.bottom, text='Student Name', font='Aerial 20 bold',bg='#219dcd', fg='black')
+        self.namelabel=Label(self.bottom, text='Faculty Name', font='Aerial 20 bold',bg='#219dcd', fg='black')
         self.namelabel.place(x=0,y=10)
 
-        self.usnlabel = Label(self.bottom, text='USN', font='Aerial 20 bold', bg='#219dcd', fg='black')
-        self.usnlabel.place(x=0, y=60)
+        self.usnlabel = Label(self.bottom, text='Subject Code', font='Aerial 20 bold', bg='#219dcd', fg='black')
+        self.usnlabel.place(x=0, y=80)
 
         self.emaillabel = Label(self.bottom, text='Email', font='Aerial 20 bold', bg='#219dcd', fg='black')
-        self.emaillabel.place(x=0, y=110)
+        self.emaillabel.place(x=0, y=150)
 
+        self.Enter_attendance = Button(self.bottom, text='Enter Attendance',width=15, font='Aerial 20 bold', bg='black', fg='#ebb434')
+        self.Enter_attendance.place(x=50,y=240)
+
+        self.Enter_marks = Button(self.bottom, text='Enter Marks',width=15, font='Aerial 20 bold', bg='black',fg='#ebb434')
+        self.Enter_marks.place(x=330, y=240)
 
 
 
