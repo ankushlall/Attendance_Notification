@@ -1,0 +1,177 @@
+from tkinter import *
+from tkinter.font import Font
+from tkinter import messagebox as ms
+import sqlite3
+import datetime
+date = datetime.datetime.now().date()
+date = str(date)
+from tkinter.ttk import Combobox
+
+
+
+root = Tk()
+root.config(bg='#565656')
+root.title('Login')
+root.geometry("650x550+350+200")
+root.resizable(False, False)
+# ------------------Variables for Login------------------------
+first_name = StringVar()
+last_name = StringVar()
+subject_code = StringVar()
+email = StringVar()
+password = StringVar()
+retype_pass = StringVar()
+validation_username = StringVar()
+validation_password = StringVar()
+total_classes=StringVar()
+#user_name = StringVar()
+#login_password = StringVar()
+
+
+# ----------------Signup Method---------------------------------
+
+def signup():
+    fname = first_name.get()
+    lname = last_name.get()
+    scode = subject_code.get()
+    em = email.get()
+    passs = password.get()
+    retype = retype_pass.get()
+    conn = sqlite3.connect('Main.db')
+    with conn:
+        cursor = conn.cursor()
+    cursor.execute('CREATE TABLE IF NOT EXISTS staff (first_name Text NOT NULL, last_name TEXT, subject_code TEXT PRIMARY KEY, email TEXT NOT NULL, password TEXT NOT NULL, retype_pass TEXT NOT NULL)')
+    cursor.execute('INSERT INTO staff (first_name, last_name, subject_code, email, password, retype_pass)  VALUES (?,?,?,?,?,?)',
+                   (fname,lname,scode,em,passs,retype,))
+    conn.commit()
+
+def Login_window():
+    loginwindow = Tk()
+    loginwindow.config(bg='#565656')
+    loginwindow.title('Login')
+    loginwindow.geometry("650x550+350+200")
+    loginwindow.resizable(False, False)
+    heading = Label(loginwindow, text='JAIN UNIVERSITY', bg='#565656', fg='black', font=('Bookman Old Style', 30, 'bold')).place(
+        x=160, y=10)
+    loginLabel = Label(loginwindow, text='Login', bg='#565656', fg='black', font=('Bookman Old Style', 25, 'bold')).place(x=310,
+                                                                                                               y=80)
+    username_login = Label(loginwindow,textvar=validation_username,text='USERNAME', bg='#565656', fg='black', font=('Bookman Old Style', 20)).place(x=150,
+                                                                                                              y=180)
+    password_login = Label(loginwindow,textvar=validation_password,text='PASSWORD', bg='#565656', fg='black', font=('Bookman Old Style', 20)).place(x=150,
+                                                                                                              y=260)
+    username_login_entry = Entry(loginwindow, width=20, font=('Bookman Old Style', 15)).place(x=380, y=180)
+    password_login_entry = Entry(loginwindow, width=20, font=('Bookman Old Style', 15)).place(x=380, y=260)
+
+    submit_login = Button(loginwindow, width=10, text='LOGIN',command=login, font=('Bookman Old Style', 15)).place(x=300, y=380)
+
+    loginwindow.mainloop()
+
+def login():
+    subject_code = validation_username.get()
+    password = validation_password.get()
+    conn = sqlite3.connect('Main.db')
+    with conn:
+        cursor = conn.cursor()
+    cursor.execute('SELECT * FROM staff WHERE subject_code = ? and password = ?', (subject_code,password,))
+    result = cursor.fetchall()
+    if result:
+        ms.showinfo('Hello'+subject_code)
+    else:
+        ms.showerror('no data')
+
+
+
+
+
+
+
+def Staff_home():
+    homewindow=Tk()
+    homewindow.title("Staff Home")
+    homewindow.geometry("650x550+350+200")
+    homewindow.resizable(False, False)
+    topframe = Frame(homewindow, height=150,bg='black').pack(fill=X)
+    bottomframe = Frame(homewindow, height=550, bg='#565656').pack(fill=X)
+    #img=PhotoImage(file='a.png')
+    #mglabel=Label(homewindow,image=img).place(x=10,y=10)
+    Label(homewindow,text='Faculty Profile',font='Aerial 30 bold',fg='#ebb434',bg='black').place(x=190,y=10)
+    Label(homewindow,text=''+date,font='Aerial 25 bold',fg='#ebb434',bg='black').place(x=220,y=80)
+
+    namelabel = Label(homewindow, text='Faculty Name', font='Aerial 20 bold', bg='#565656', fg='black')
+    namelabel.place(x=0, y=160)
+
+    usnlabel = Label(homewindow, text='Subject Code', font='Aerial 20 bold', bg='#565656', fg='black')
+    usnlabel.place(x=0, y=220)
+
+    emaillabel = Label(homewindow, text='Email', font='Aerial 20 bold', bg='#565656', fg='black')
+    emaillabel.place(x=0, y=280)
+
+    Enter_attendance = Button(homewindow, text='Enter Attendance',command=enter_attendance, width=15, font='Aerial 20 bold', bg='black',
+                                   fg='#ebb434')
+    Enter_attendance.place(x=50, y=390)
+
+    Enter_marks = Button(homewindow, text='Enter Marks', width=15, font='Aerial 20 bold', bg='black',
+                              fg='#ebb434')
+    Enter_marks.place(x=330, y=390)
+    #Label(homewindow,text='© 2019 Ankushlall.com All Rights Reserved',font='Aerial 10 bold', bg='#219dcd',fg='black').place(x=190,y=480)
+
+    homewindow.mainloop()
+
+def enter_attendance():
+    month=['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    EnterAttendance = Tk()
+    EnterAttendance.title('Enter Attendance')
+    EnterAttendance.geometry("650x550+350+200")
+    EnterAttendance.resizable(False, False)
+    EnterAttendance.config(bg='black')
+    top=Frame(EnterAttendance,height=150,bg='black').pack(fill=X)
+    bottom=Frame(EnterAttendance, height=550, bg='#565656').pack(fill=X)
+    Label(EnterAttendance,text='Enter Attendance of Students', bg='black', fg='#ebb434',font='Aerial 18 bold').place(x=180,y=20)
+    Label(EnterAttendance,text='Select The Month', bg='black', fg='#ebb434',font='Aerial 12 bold').place(x=200,y=70)
+    combo = Combobox(EnterAttendance,values=month,height=12)
+    combo.set('Select')
+    combo.place(x=360,y=70)
+    scroll = Scrollbar(bottom)
+    scroll.pack(side=RIGHT,fill=Y)
+    Label(EnterAttendance, text='Total No. of Classes', bg='black', fg='#ebb434', font='Aerial 12 bold').place(x=190, y=110)
+    Entry(EnterAttendance,width=23,textvar=total_classes).place(x=360,y=110)
+
+
+
+
+
+
+    EnterAttendance.mainloop()
+
+
+
+
+
+
+headingfont = Font(family='Bookman Old Style', size=30, weight='bold')
+loginfont = Font(family='Bookman Old Style', size=20)
+detailsfont = Font(family='Bookman Old Style', size=18)
+for_entry_size = ('Bookman Old Style', 15)
+Label(root, text='JAIN UNIVERSITY', bg='#565656', fg='black', font=headingfont).place(x=160, y=10)
+
+Button(root, text='LOGIN', command=Login_window, bg='black', fg='#565656',width=10, font=for_entry_size).place(x=380, y=480)
+Label(root, text='SIGN UP', bg='#565656', fg='black', font=for_entry_size).place(x=300, y=80)
+
+Label(root, text='First Name', bg='#565656', fg='black', font=detailsfont).place(x=150, y=150)
+Label(root, text='Last Name', bg='#565656', fg='black', font=detailsfont).place(x=150, y=200)
+Label(root, text='Subject Code', bg='#565656', fg='black', font=detailsfont).place(x=150, y=250)
+Label(root, text='Email', bg='#565656', fg='black', font=detailsfont).place(x=150, y=300)
+Label(root, text='Password', bg='#565656', fg='black', font=detailsfont).place(x=150, y=350)
+Label(root, text='Retype Password', bg='#565656', fg='black', font=detailsfont).place(x=130, y=400)
+
+# ..............Entry For Details.............
+
+Entry(root, width=20,textvar=first_name, font=for_entry_size).place(x=350, y=150)
+Entry(root, width=20,textvar=last_name, font=for_entry_size).place(x=350, y=200)
+Entry(root, width=20,textvar=subject_code, font=for_entry_size).place(x=350, y=250)
+Entry(root, width=20,textvar=email, font=for_entry_size).place(x=350, y=300)
+Entry(root, width=20,textvar=password, font=for_entry_size).place(x=350, y=350)
+Entry(root, width=20,textvar=retype_pass, font=for_entry_size).place(x=350, y=400)
+Button(root, width=10, text='SUBMIT',command=signup,bg='black',fg='#565656',font=for_entry_size).place(x=230, y=480)
+#Button(root,width=20,command=Staff_home).place(x=430, y=480)
+root.mainloop()
